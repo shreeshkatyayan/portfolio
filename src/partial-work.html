@@ -1,0 +1,23 @@
+<div class="work">
+	<section>
+		<h1>What can I do.</h1>
+		<div class="row container">
+			<div class="col half">
+				<img src="img/avatar_skills.png">
+			</div>
+			<div class="col half left content">
+				<h2>Design what you want.</h2>
+				<p>I love design and I love it simple. My goal is to focus on content and conveying the message you want to send in most efficient way.</p>
+			</div>
+		</div>
+	</section>
+	<div class="container" ng-controller="workController">
+		<figure class="project" ng-repeat="project in projects">
+			<img ng-src="{{ project.cover }}" />
+			<div class="caption">
+				<p>{{ project.description }}</p>
+				<a href="#!"><span>{{ project.name }}<i class="material-icons">link</i></span></a>
+			</div>
+		</figure>
+	</div>
+</div>
