@@ -19,5 +19,8 @@
   "dependencies": {
     "bower": "^1.8.0",
     "gulp": "^3.9.1"
+  },
+  "devDependencies": {
+    "webpack": "^2.5.1"
   }
 }
