@@ -26,6 +26,7 @@
     "gulp-util": "^3.0.8"
   },
   "devDependencies": {
-    "browserify": "^14.3.0"
+    "browserify": "^14.3.0",
+    "scss-mixins": "^0.1.3"
   }
 }
