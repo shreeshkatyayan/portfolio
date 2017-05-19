@@ -10,46 +10,54 @@ var gutil = require('gulp-util');
 var uglify = require('gulp-uglify');
 var size = require('gulp-size');
 
-function bundle(devMode) {
-	if (devMode) {
-		return function() {
-			return browserify({
-				entries: ['./src/app.js'],
-				debug: true
-			}).bundle()
-				.on('error', gutil.log.bind(gutil, "Browserify Error"))
-				.pipe(source('app.min.js'))
-				.pipe(vinylBuffer())
-				.pipe(sourcemaps.init({loadMaps: true}))
-				.pipe(sourcemaps.write('./'))
-				.pipe(size({
-					title: "app.min.js"
-				}))
-				.pipe(gulp.dest('./dist/js'));
-		}
+var extend = require('extend');
+var parseArgs = require('minimist');
+
+function bundle() {
+
+	var config = extend({
+		env: process.env.NODE_ENV
+	}, parseArgs(process.argv.slice(2)));
+
+	if (config.env === "production") {
+		return browserify({
+		       entries: ['./src/app.js'],
+		       debug: true
+		})
+			.bundle()
+			.on('error', gutil.log.bind(gutil, "Browserify Error"))
+			.pipe(source('app.min.js'))
+			.pipe(vinylBuffer())
+			.pipe(stripDebug())
+			.pipe(uglify({
+				compress: true
+			}))
+			.on('error', gutil.log)
+			.pipe(size({
+				title: "app.min.js"
+			}))
+			.pipe(size({
+				title: "app.min.js",
+				gzip: true
+			}))
+			.pipe(gulp.dest('./dist/js'));
 	} else {
-		return function() {
-			return browserify({
-				entries: ['./src/app.js'],
-				debug: true
-			}).bundle()
-				.on('error', gutil.log.bind(gutil, "Browserify Error"))
-				.pipe(source('app.min.js'))
-				.pipe(vinylBuffer())
-				.pipe(stripDebug())
-				.pipe(uglify({
-					compress: true
-				}))
-				.on('error', gutil.log)
-				.pipe(size({
-					title: "app.min.js"
-				}))
-				.pipe(size({
-					title: "app.min.js",
-					gzip: true
-				}))
-				.pipe(gulp.dest('./dist/js'));
-		}
+		return browserify({
+			entries: ['./src/app.js'],
+			debug: true
+		})
+			.bundle()
+			.on('error', gutil.log.bind(gutil, "Browserify Error"))
+			.pipe(source('app.min.js'))
+			.pipe(vinylBuffer())
+			.pipe(sourcemaps.init({
+				loadMaps: true
+			}))
+			.pipe(sourcemaps.write('./'))
+			.pipe(size({
+				title: "app.min.js"
+			}))
+			.pipe(gulp.dest('./dist/js'));
 	}
 }
 
