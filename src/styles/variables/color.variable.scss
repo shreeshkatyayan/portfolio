@@ -1,0 +1,32 @@
+/*  ==========================================================================
+	Colors declaration
+	========================================================================== */
+$pallete: (
+	$blue: (
+        $background: #2196f3,
+        $text: rgba(#fff, 0.91),
+        $secondary_text: rgba(#fff, 0.74),
+        $inverted_text: #0069c0
+    )
+);
+
+/*  Color getter function
+	@author - Shreesh
+	@param {String} $color - Color selector
+	@param {String} $context - Color context selector
+	@return {Color hex}
+
+	Example:- color: @include setColor(red, base);  => color: #c82506;
+	========================================================================== */
+
+@function setColor($color: 'blue', $context: 'text') {
+	@if map-has-key($pallete, $color) {
+		@if map-has-key(map-get($pallete, $color), $context) {
+			@return map-get(map-get($pallete, $color), $context);
+		}
+		@warn "The context #{$context} is not defined in the color #{$color}";
+		@return null;
+	}
+	@warn "The color #{$color} is not defined in colors map #{$pallete}";
+	@return null;
+}
